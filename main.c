@@ -6,16 +6,14 @@ int main(void) {
   srand((unsigned int) (time NULL));
   char player_board[10][10];
   char computer_board[10][10];
-  int test = 0;
-  printf("BATTLESHIP\n\n");
+  int height = 0, width = 0;
+  char direction = '\0';
 
-  //Functions being tested
-  initialize_game_board(player_board);
   initialize_game_board(computer_board);
+  randomly_place_ships(computer_board);
+  display_board(computer_board);
 
-  //test = select_who_starts_first();
-  manually_place_ships(player_board);
-  display_board(player_board);
+
 
   return 0;
 }

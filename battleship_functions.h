@@ -14,6 +14,7 @@
 #include <math.h>
 #include <time.h>
 
+//Game setup functions
 /*************************************************************
 * Function: welcome_screen                                  *
 * Date Created: 10/25/2016                                  *
@@ -62,6 +63,19 @@ void display_board(char board[][10]);
 *************************************************************/
 int select_who_starts_first(void);
 
+//Ship placement functions
+
+/*************************************************************                   X
+* Function: get_coordinates                                 *
+* Date Created: 10/27/2016                                  *
+* Date Last Modified: 10/27/2016                            *
+* Description: Gets ship coordinates from the user          *
+* Input parameters: Board array, height/width ptr, string ship name
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void get_coordinates(int *height, int *width, char board[][10], char *ship_name);
 /*************************************************************                   X
 * Function: place_ship                                      *
 * Date Created: 10/27/2016                                  *
@@ -75,7 +89,7 @@ int select_who_starts_first(void);
 *************************************************************/
 void place_ship(char ship_name, int *height, int *width, int ship_size, char board[][10]);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: is_other_ship                                   *
 * Date Created: 10/27/2016                                  *
 * Date Last Modified: 10/27/2016                            *
@@ -87,7 +101,19 @@ void place_ship(char ship_name, int *height, int *width, int ship_size, char boa
 *************************************************************/
 int is_other_ship(char board[][10], int height, int width, int ship_size, char direction);
 
-/*************************************************************
+/*************************************************************                   X
+* Function: is_out                                          *
+* Date Created: 10/27/2016                                  *
+* Date Last Modified: 10/27/2016                            *
+* Description: Checks if a ship will be off the board
+* Input parameters: char board[][10], int *height, int *width, int ship_size char direction
+* Returns: 1 if out, 0 otherwise           *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+int is_out(int height, int width, int ship_size, char direction);
+
+/*************************************************************                   X
 * Function: manually_place_ships                            *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
@@ -99,12 +125,51 @@ int is_other_ship(char board[][10], int height, int width, int ship_size, char d
 *************************************************************/
 void manually_place_ships(char board[][10]);
 
+//Random ship placement functions
+
+/*************************************************************                   X
+* Function: generate_random_coordinates                     *
+* Date Created: 10/25/2016                                  *
+* Date Last Modified: 10/25/2016                            *
+* Description: Generates random coordinates                 *
+* Input parameters: Char array board, int height/width pointers,
+                    direction ptr, ship size
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void generate_random_coordinates(int *h, int *w, char board[][10]);
+
+/*************************************************************
+* Function: generate_random_direction                       *
+* Date Created: 10/25/2016                                  *
+* Date Last Modified: 10/25/2016                            *
+* Description: Generates random direction for ship          *
+* Input parameters: Char array board, int height/width pointers
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void generate_random_direction(char *direction);
+
+/*************************************************************
+* Function: place_random_ships                              *
+* Date Created: 10/27/2016                                  *
+* Date Last Modified: 10/27/2016                            *
+* Description: Places a ship randomly                       *
+* Input parameters: Fucking everything and the kitchen sink *
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void place_random_ships(int *h, int *w, int ship_size, char ship_name, char *direction, char board[][10]);
+
 /*************************************************************
 * Function: randomly_place_ships                            *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
 * Description: Randomly places ships (for AI)               *
-* Input parameters: Char array board, width 10               *
+* Input parameters: Char array board, width 10              *
 * Returns: None                                             *
 * Preconditions: None                                       *
 * Postconditions: None                                      *

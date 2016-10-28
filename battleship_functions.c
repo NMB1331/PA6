@@ -51,10 +51,10 @@ int select_who_starts_first(void) {
 }
 
 //Function that gets coordinates for ships
-void get_coordinates(int *height, int *width, char board[][10], char *ship_name) {
+void get_coordinates(int *height, int *width, char board[][10]) {
   int h = 11, w = 11;
   while ((h < 0) || (h > BOARD_SIZE-1) || (w < 0) || (w < BOARD_SIZE-1) || !(board[h][w] == '~')) {
-    printf("Enter the coordinates for %s: ", ship_name);
+    printf("Enter the coordinates: ");
     scanf("%d%d", &h, &w);
     if (board[h][w] == '~') {
       break; }
@@ -63,6 +63,15 @@ void get_coordinates(int *height, int *width, char board[][10], char *ship_name)
   *width = w;
 }
 
+//Function that gets the direction of a ship
+void get_direction(char *direction) {
+  while (1) {
+  printf("Do you want to go up, down, left, or right? ['u', 'd', 'l', 'r'] ");
+  scanf(" %c", direction);
+  if (*direction == 'u' || *direction == 'd' || *direction == 'l' || *direction == 'r') {
+    break; }
+  }
+}
 
 //Function that ensures no ships overlap
 int is_other_ship(char board[][10], int height, int width, int ship_size, char direction) {
@@ -117,112 +126,64 @@ int is_out(int height, int width, int ship_size, char direction) {
 }
 
 //Function that places ships, given direction, ship size, and ship name, and board
-void place_ship(char ship_name, int *height, int *width, int ship_size, char board[][10]) {
-  char direction = '\0';
-  int direction_check = 0;
-
+void place_ship(int *h, int *w, int ship_size, char ship_name, char *direction, char board[][10]) {
+  int out = 1, overlap = 1;
   do {
-      //Gets the direction to place the ship; ensures user enters valid direction
-      while (1) {
-      printf("Direction: %c\n", direction);
-      printf("Do you want to go up, down, left, or right? ['u', 'd', 'l', 'r'] ");
-      scanf(" %c", &direction);
-      if (direction == 'u' || direction == 'd' || direction == 'l' || direction == 'r') {
-        break; }
-      }
+    //Gets coordinates and direction
+    get_coordinates(h, w, board);
+    get_direction(direction);
+    //Checks if valid
+    overlap = is_other_ship(board, *h, *w, ship_size, *direction);
+    out = is_out(*h, *w, ship_size, *direction);
 
-      //Determines if there is any overlap between ships
-      int overlap = is_other_ship(board, *height, *width, ship_size, direction);
-      int out = is_out(*height, *width, ship_size, direction);
-      printf("Overlap: %d\n", overlap); //For debugging. Delete later
-      printf("Out: %d\n", out);
+  } while (out || overlap);
 
-      //Checks if up is valid placement
-      if (direction == 'u') {
-        if (out || overlap) {
-          printf("Uh oh! You can't go up!\n");
-          direction_check = 0;
-          direction = '\0'; }
-        //If up is valid, places ship above initial point
-        else if (*height - ship_size >= 0) {
-          for (int i=0; i<ship_size; i++) {
-            board[*height-i][*width] = ship_name; }
-            direction_check = 1;
-        }
-      }
-      //Checks if down is valid placement
-      else if (direction == 'd') {
-        if (out || overlap) {
-          printf("Uh oh! You can't go down!\n");
-          direction = '\0';
-          direction_check = 0; }
-        //If down is valid, positions ship below initial point
-        else if (*height + ship_size <= 10) {
-          for (int i=0; i<ship_size; i++) {
-            board[*height+i][*width] = ship_name; }
-            direction_check = 1;
-        }
-      }
-      //Checks if left is valid placement
-      else if (direction == 'l') {
-        if (out || overlap) {
-          printf("Uh oh! You can't go left!\n");
-          direction = '\0';
-          direction_check = 0; }
-        //If left is valid, positions ship left of initial point
-        else if (*width - ship_size >= 0) {
-          for (int i=0; i<ship_size; i++) {
-            board[*height][*width-i] = ship_name; }
-            direction_check = 1;
-        }
-      }
-      //Checks if right is valid placement
-      else if (direction == 'r') {
-        if (out || overlap) {
-          printf("Uh oh! You can't go right!\n");
-          direction = '\0';
-          direction_check = 0; }
-        //If right is valid, postions ship right of initial point
-        else if (*width + ship_size <= 10) {
-          for (int i=0; i<ship_size; i++) {
-            board[*height][*width+i] = ship_name; }
-            direction_check = 1;
-        }
-      }
+  if (*direction == 'u') {
+    for (int i=0; i<ship_size; i++) {
+      board[*h-i][*w] = ship_name; }
+  }
+  if (*direction == 'd') {
+    for (int i=0; i<ship_size; i++) {
+      board[*h+i][*w] = ship_name; }
+  }
+  if (*direction == 'l') {
+    for (int i=0; i<ship_size; i++) {
+      board[*h][*w-i] = ship_name; }
+  }
+  if (*direction == 'r') {
+    for (int i=0; i<ship_size; i++) {
+      board[*h][*w+i] = ship_name; }
+  }
 
-
-    } while (direction_check == 0);
 }
 
 //Function that allows the user to manually place their ships
 void manually_place_ships(char board[][10]) {
-  int height = 11, width = 11;
+  //Variables declared
+  int h = 11, w = 11;
   char direction = '\0';
 
-  //Places the carrier on the board
   display_board(board);
-  get_coordinates(&height, &width, board, "Carrier");
-  place_ship('c', &height, &width, CARRIER, board);
-
-  //Places the battleship on the board
+  //Places carrier
+  printf("CARRIER\n");
+  place_ship(&h, &w, CARRIER, 'c', &direction, board);
   display_board(board);
-  get_coordinates(&height, &width, board, "Battleship");
-  place_ship('b', &height, &width, BATTLESHIP, board);
-
-  //Places the cruiser on the board
+  //Places battleship
+  printf("BATTLESHIP\n");
+  place_ship(&h, &w, BATTLESHIP, 'b', &direction, board);
   display_board(board);
-  get_coordinates(&height, &width, board, "Cruiser");
-  place_ship('r', &height, &width, CRUISER, board);
-
-  //Places the submarine on the board
+  //Places cruiser
+  printf("CRUISER\n");
+  place_ship(&h, &w, CRUISER, 'r', &direction, board);
   display_board(board);
-  get_coordinates(&height, &width, board, "Submarine");
-  place_ship('s', &height, &width, SUBMARINE, board);
-
-  //Places the destroyer on the board
+  //Places submarine
+  printf("SUBMARINE\n");
+  place_ship(&h, &w, SUBMARINE, 's', &direction, board);
   display_board(board);
-  get_coordinates(&height, &width, board, "Destroyer");
-  place_ship('d', &height, &width, DESTROYER, board);
+  //Places destroyer
+  printf("DESTROYER\n");
+  place_ship(&h, &w, DESTROYER, 'd', &direction, board);
+  display_board(board);
 
 }
 

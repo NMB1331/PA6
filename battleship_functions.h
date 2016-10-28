@@ -75,7 +75,20 @@ int select_who_starts_first(void);
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
-void get_coordinates(int *height, int *width, char board[][10], char *ship_name);
+void get_coordinates(int *height, int *width, char board[][10]);
+
+/*************************************************************                   X
+* Function: get_coordinates                                 *
+* Date Created: 10/27/2016                                  *
+* Date Last Modified: 10/27/2016                            *
+* Description: Gets ship direction from the user            *
+* Input parameters: Char pointer direction                  *
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void get_direction(char *direction);
+
 /*************************************************************                   X
 * Function: place_ship                                      *
 * Date Created: 10/27/2016                                  *
@@ -87,7 +100,7 @@ void get_coordinates(int *height, int *width, char board[][10], char *ship_name)
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
-void place_ship(char ship_name, int *height, int *width, int ship_size, char board[][10]);
+void place_ship(int *h, int *w, int ship_size, char ship_name, char *direction, char board[][10]);
 
 /*************************************************************                   X
 * Function: is_other_ship                                   *
@@ -140,7 +153,7 @@ void manually_place_ships(char board[][10]);
 *************************************************************/
 void generate_random_coordinates(int *h, int *w, char board[][10]);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: generate_random_direction                       *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
@@ -152,7 +165,7 @@ void generate_random_coordinates(int *h, int *w, char board[][10]);
 *************************************************************/
 void generate_random_direction(char *direction);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: place_random_ships                              *
 * Date Created: 10/27/2016                                  *
 * Date Last Modified: 10/27/2016                            *
@@ -164,7 +177,7 @@ void generate_random_direction(char *direction);
 *************************************************************/
 void place_random_ships(int *h, int *w, int ship_size, char ship_name, char *direction, char board[][10]);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: randomly_place_ships                            *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *

@@ -9,14 +9,34 @@ void initialize_game_board(char board[10][10]) {
 }
 
 //Function that prints the game board
-void display_board(char board[10][10]) {
-  for (int i=0; i<BOARD_SIZE; i++) {
-    for (int j=0; j<BOARD_SIZE; j++) {
-      printf("%c", board[i][j]); }
+void display_board(char board[10][10], int player_number) {
+  if (player_number == 1) {
+    for (int i=0; i<BOARD_SIZE; i++) {
+      for (int j=0; j<BOARD_SIZE; j++) {
+        printf("%c ", board[i][j]); }
+      printf("\n");
+    }
     printf("\n");
   }
-  printf("\n");
-}
+  else if (player_number == 2) {
+    for (int i=0; i<BOARD_SIZE; i++)
+    {
+      for (int j=0; j<BOARD_SIZE; j++)
+      {
+        if (board[i][j] == '~' || board[i][j] == 'X' || board[i][j] == 'M')
+        {
+          printf("%c ", board[i][j]);
+        }
+        else
+        {
+          printf("~ ");
+        }
+      }
+      printf("\n");
+    }
+    printf("\n");
+  }
+  }
 
 //Determines who starts first
 int select_who_starts_first(void) {
@@ -163,27 +183,27 @@ void manually_place_ships(char board[][10]) {
   int h = 11, w = 11;
   char direction = '\0';
 
-  display_board(board);
+  display_board(board, PLAYER1);
   //Places carrier
   printf("CARRIER\n");
   place_ship(&h, &w, CARRIER, 'c', &direction, board);
-  display_board(board);
+  display_board(board, PLAYER1);
   //Places battleship
   printf("BATTLESHIP\n");
   place_ship(&h, &w, BATTLESHIP, 'b', &direction, board);
-  display_board(board);
+  display_board(board, PLAYER1);
   //Places cruiser
   printf("CRUISER\n");
   place_ship(&h, &w, CRUISER, 'r', &direction, board);
-  display_board(board);
+  display_board(board, PLAYER1);
   //Places submarine
   printf("SUBMARINE\n");
   place_ship(&h, &w, SUBMARINE, 's', &direction, board);
-  display_board(board);
+  display_board(board, PLAYER1);
   //Places destroyer
   printf("DESTROYER\n");
   place_ship(&h, &w, DESTROYER, 'd', &direction, board);
-  display_board(board);
+  display_board(board, PLAYER1);
 
 }
 
@@ -265,6 +285,66 @@ void randomly_place_ships(char board[][10]) {
   place_random_ships(&h, &w, DESTROYER, 'd', &direction, board);
 
 }
+
+//Function that gets shot coordinates from the user
+void get_shot(int *h, int *w, char board[][10]) {
+  int height = 11, width = 11;
+  do
+  {
+    printf("Enter the coordinates for a shot: ");
+    scanf("%d%d", &height, &width);
+  }
+  while(height < 0 || height > (BOARD_SIZE-1) || width < 0 || width > (BOARD_SIZE-1) || board[height][width] == 'X' || board[height][width] == 'M');
+  *h = height;
+  *w = width;
+}
+
+//Function that checks if a shot is a hit or miss
+int check_shot(int height, int width, char board[][10]) {
+  if (board[height][width] == '~')
+  {
+    return MISS;
+  }
+  else if (board[height][width] == 'c' || board[height][width] == 'b' || board[height][width] == 'r' || board[height][width] == 's' || board[height][width] == 'd' )
+  {
+    return HIT;
+  }
+  else
+  {
+    printf("ERROR CHECKING SHOT\n");
+    return -1;
+  }
+}
+
+//Function that updates the board after a shot ('X' for hit, 'M' for miss)
+void update_board(int height, int width, char board[][10]) {
+  if (check_shot(height, width, board) == HIT)
+  {
+    printf("Hit!\n");
+    board[height][width] = 'X';
+  }
+  else if (check_shot(height, width, board) == MISS)
+  {
+    printf("Miss!\n");
+    board[height][width] = 'M';
+  }
+  else
+  {
+    printf("ERROR UPDATING BOARD\n");
+  }
+}
+
+//Function that plays one round ("a shot")
+void play_shot(char board[][10], int player_number) {
+  int height = 0, width = 0;
+  if (player_number == 1)
+  {
+    get_shot(&height, &width, board);
+    update_board(height, width, board);
+  }
+
+}
+
 //
 //
 //

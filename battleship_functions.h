@@ -1,4 +1,5 @@
 #ifndef BATTLESHIP_H
+
 #define BATTLESHIP_H
 #define BOARD_SIZE 10
 #define PLAYER1 1
@@ -8,6 +9,8 @@
 #define CRUISER 3
 #define SUBMARINE 3
 #define DESTROYER 2
+#define HIT 1
+#define MISS 0
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +52,7 @@ void initialize_game_board(char board[][10]);
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
-void display_board(char board[][10]);
+void display_board(char board[][10], int player_number);
 
 /*************************************************************                   X
 * Function: select_who_starts_first                         *
@@ -190,7 +193,20 @@ void place_random_ships(int *h, int *w, int ship_size, char ship_name, char *dir
 void randomly_place_ships(char board[][10]);
 
 //Shooting functions
-/*************************************************************
+
+/*************************************************************                   X
+* Function: get_shot                                        *
+* Date Created: 10/28/2016                                  *
+* Date Last Modified: 10/28/2016                            *
+* Description: Gets shot coordinates from the user          *
+* Input parameters: Board array, height/width ptr           *
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void get_shot(int *height, int *width, char board[][10]);
+
+/*************************************************************                   X
 * Function: check_shot                                      *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
@@ -200,9 +216,9 @@ void randomly_place_ships(char board[][10]);
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
-int check_shot(int height, int width);
+int check_shot(int height, int width, char board[][10]);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: update_board                                    *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
@@ -226,7 +242,7 @@ void update_board(int height, int width, char board[][10]);
 *************************************************************/
 void output_current_move(FILE *outfile, int height, int width, char result);
 
-/*************************************************************
+/*************************************************************                   X
 * Function: play_shot                                       *
 * Date Created: 10/26/2016                                  *
 * Date Last Modified: 10/26/2016                            *
@@ -236,19 +252,7 @@ void output_current_move(FILE *outfile, int height, int width, char result);
 * Preconditions: check_shot and update_board must be declared
 * Postconditions: None                                      *
 *************************************************************/
-void play_shot(char board[][10]);
-
-/*************************************************************
-* Function: is_winner                                       *
-* Date Created: 10/25/2016                                  *
-* Date Last Modified: 10/25/2016                            *
-* Description: Checks boards for winner                     *
-* Input parameters: 2 double integer board arrays, width 10 *
-* Returns: 1 if P1 wins, 2 if P2 wins, 0 otherwise          *
-* Preconditions: None                                       *
-* Postconditions: None                                      *
-*************************************************************/
-int is_winner(char p1_board[][10], char p2_board[][10]);
+void play_shot(char board[][10], int player_number);
 
 /*************************************************************
 * Function: check_if_ship_sunk                              *
@@ -263,16 +267,16 @@ int is_winner(char p1_board[][10], char p2_board[][10]);
 int check_if_ship_sunk(char board[][10], char ship_name);
 
 /*************************************************************
-* Function: randomly_place_ships                            *
+* Function: is_winner                                       *
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
-* Description: Randomly places ships (for AI)               *
-* Input parameters: char array board, width 10               *
-* Returns: None                                             *
+* Description: Checks boards for winner                     *
+* Input parameters: 2 double integer board arrays, width 10 *
+* Returns: 1 if P1 wins, 2 if P2 wins, 0 otherwise          *
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
-void randomly_place_ships(char board[][10]);
+int is_winner(char p1_board[][10], char p2_board[][10]);
 
 /*************************************************************
 * Function: output_stats                                    *

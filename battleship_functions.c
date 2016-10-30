@@ -299,6 +299,18 @@ void get_shot(int *h, int *w, char board[][10]) {
   *w = width;
 }
 
+//Function that generates random shot coordinates
+void get_random_shot(int *h, int *w, char board[][10]) {
+  int height = 11, width = 11;
+  do
+  {
+    height = rand() % 9;
+    width = rand() % 9;
+  } while(board[height][width] == 'X' || board[height][width] == 'M');
+  *h = height;
+  *w = width;
+}
+
 //Function that checks if a shot is a hit or miss
 int check_shot(int height, int width, char board[][10]) {
   if (board[height][width] == '~')
@@ -342,7 +354,40 @@ void play_shot(char board[][10], int player_number) {
     get_shot(&height, &width, board);
     update_board(height, width, board);
   }
+  else if (player_number == 2)
+  {
+    get_random_shot(&height, &width, board);
+    printf("Computer shot: %d,%d\n", height, width);
+    update_board(height, width, board);
+  }
 
+}
+
+//Function that checks if a ship is sunk
+int check_if_ship_sunk(char board[][10], char ship_name) {
+  for (int i=0; i< BOARD_SIZE; i++)
+  {
+    for (int j=0; j< BOARD_SIZE; j++)
+    {
+      if (board[i][j] == ship_name)
+      {
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+
+//Function that checks if there is a winner
+int is_winner(char board[][10]) {
+  if (check_if_ship_sunk(board, 'c') && check_if_ship_sunk(board, 'b') && check_if_ship_sunk(board, 'r') && check_if_ship_sunk(board, 's') && check_if_ship_sunk(board, 'd'))
+  {
+    return 1;
+  }
+  else
+  {
+  return 0;
+  }
 }
 
 //

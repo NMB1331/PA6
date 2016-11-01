@@ -1,7 +1,8 @@
 #include "battleship_functions.h"
 #include "battleship_functions.c"
 
-int main(void) {
+int main(void)
+{
   //Variables initialized; seed created for rand()
   srand((unsigned int) (time NULL));
   char player_board[10][10], p1_remaining_ships[5] = {'c', 's', 'r', 'b', 'd'};
@@ -9,17 +10,25 @@ int main(void) {
   Stats p1_stats = {0,0,0,0.0};
   Stats p2_stats = {0,0,0,0.0};
 
-  //Sets up the games
+  //Sets up the boards; randomly places computer ships
   initialize_game_board(player_board);
   initialize_game_board(computer_board);
+  randomly_place_ships(computer_board);
+
+  //Welcomes the player; lets them place their ships
+  welcome_screen();
+  //system("pause");
+  //system("cls");
   place_player_ships(player_board);
   //system("pause");
   //system("cls");
-  randomly_place_ships(computer_board);
+
+  //Determines who plays first
   int current_player = select_who_starts_first();
 
   //Plays the game
-  while (!is_winner(player_board) && !is_winner(computer_board)) {
+  while (!is_winner(player_board) && !is_winner(computer_board))
+  {
     if (current_player == 1)
     {
       play_shot(computer_board, PLAYER1);
@@ -55,10 +64,6 @@ int main(void) {
 
 /*
 NOTES:
-  -prompt player to choose ship locations or have them be random
-  -
-
-
 AI:
   -create float probability array, adjust after every shot
   -have the computer shoot at the highest probability

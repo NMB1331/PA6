@@ -18,7 +18,8 @@
 #include <math.h>
 #include <time.h>
 
-typedef struct stats {
+typedef struct stats
+{
   int num_hits;
   int num_misses;
   int total_shots;

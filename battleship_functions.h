@@ -11,11 +11,19 @@
 #define DESTROYER 2
 #define HIT 1
 #define MISS 0
+#define NUM_SHIPS 5
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+
+typedef struct stats {
+  int num_hits;
+  int num_misses;
+  int total_shots;
+  double hit_miss_ratio;
+} Stats;
 
 //Game setup functions
 /*************************************************************
@@ -141,6 +149,19 @@ int is_out(int height, int width, int ship_size, char direction);
 *************************************************************/
 void manually_place_ships(char board[][10]);
 
+/*************************************************************                   X
+* Function: place_player_ships                              *
+* Date Created: 10/25/2016                                  *
+* Date Last Modified: 11/1/2016                             *
+* Description: Allows the player to place ships (manually or randomly)
+* Input parameters: Int array board, width 10               *
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void place_player_ships(char board[][10]);
+
+
 //Random ship placement functions
 
 /*************************************************************                   X
@@ -192,7 +213,7 @@ void place_random_ships(int *h, int *w, int ship_size, char ship_name, char *dir
 *************************************************************/
 void randomly_place_ships(char board[][10]);
 
-//Shooting functions
+//Shooting functions/main game body functions
 
 /*************************************************************                   X
 * Function: get_shot                                        *
@@ -271,12 +292,24 @@ void play_shot(char board[][10], int player_number);
 * Date Created: 10/25/2016                                  *
 * Date Last Modified: 10/25/2016                            *
 * Description: Checks if a ship is sunk                     *
-* Input parameters: char array board, width 10, char ship name
+* Input parameters: Char array board, width 10, char ship name
 * Returns: 1 if sunk, 0 if not                              *
 * Preconditions: None                                       *
 * Postconditions: None                                      *
 *************************************************************/
 int check_if_ship_sunk(char board[][10], char ship_name);
+
+/*************************************************************                   X
+* Function: notify_player_ship_sunk                         *
+* Date Created: 11/1/2016                                   *
+* Date Last Modified: 11/1/2016                             *
+* Description: Tells the player they sunk a ship            *
+* Input parameters: Char board array && remaining_ships array
+* Returns: None (tells the user they sunk a ship)           *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void notify_player_ship_sunk(char board[][10], char remaining_ships[5]);
 
 /*************************************************************                   X
 * Function: is_winner                                       *
@@ -289,6 +322,32 @@ int check_if_ship_sunk(char board[][10], char ship_name);
 * Postconditions: None                                      *
 *************************************************************/
 int is_winner(char board[][10]);
+
+//Stats functions
+
+/*************************************************************
+* Function: output_current_move                             *
+* Date Created: 10/25/2016                                  *
+* Date Last Modified: 10/25/2016                            *
+* Description: Writes current move and result to log file   *
+* Input parameters: Int height and width, char result, file outfile
+* Returns: None                                             *
+* Preconditions: None                                       *
+* Postconditions: None                                      *
+*************************************************************/
+void output_current_move(FILE *outfile, int height, int width, char result);
+
+/*************************************************************
+* Function: update_stats                                    *
+* Date Created: 11/1/2016                                   *
+* Date Last Modified: 11/1/2016                             *
+* Description: Updates game stats after shot                *
+* Input parameters: Stats pointer, int hit (1 if hit, 0 if miss)
+* Returns: None                                             *
+* Preconditions: Typedef stats must be defined              *
+* Postconditions: None                                      *
+*************************************************************/
+void update_stats(Stats *p_stats, int hit);
 
 /*************************************************************
 * Function: output_stats                                    *

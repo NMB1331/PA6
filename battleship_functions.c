@@ -45,6 +45,7 @@ int select_who_starts_first(void) {
   while (computer_guess == 0 || computer_guess == random_number) {
     computer_guess = rand() % 10 + 1; }
   //User guess made
+  printf("This is supposed to be random, but...I thought a game would be more fun!\n");
   printf("To see who starts first, we're going to play a guessing game!\n");
   printf("We're going to pick numbers between 1 and 10, and see who's closer.\n");
   printf("The computer guessed %d\n", computer_guess);
@@ -286,6 +287,26 @@ void randomly_place_ships(char board[][10]) {
 
 }
 
+//Function that places a players ships, either randomly or manually
+void place_player_ships(char board[][10]) {
+  int manual_or_random = 0;
+  do {
+    printf("Enter 1 to select your ship's locations, or 2 for random ones: ");
+    scanf("%d", &manual_or_random);
+  } while(manual_or_random != 1 && manual_or_random != 2);
+  if (manual_or_random == 1)
+  {
+    manually_place_ships(board);
+  }
+  else if (manual_or_random == 2)
+  {
+    randomly_place_ships(board);
+    printf("The lazy way. I dig it. Here's your board: \n");
+    display_board(board, PLAYER1);
+  }
+}
+
+
 //Function that gets shot coordinates from the user
 void get_shot(int *h, int *w, char board[][10]) {
   int height = 11, width = 11;
@@ -353,18 +374,25 @@ void play_shot(char board[][10], int player_number) {
   {
     get_shot(&height, &width, board);
     update_board(height, width, board);
+    //Place function that tells if ship sunk here
   }
   else if (player_number == 2)
   {
     get_random_shot(&height, &width, board);
     printf("Computer shot: %d,%d\n", height, width);
     update_board(height, width, board);
+    //Place function that tells if ship sunk here
   }
 
 }
 
 //Function that checks if a ship is sunk
 int check_if_ship_sunk(char board[][10], char ship_name) {
+  if (ship_name == '\0')
+  {
+    return 0;
+  }
+
   for (int i=0; i< BOARD_SIZE; i++)
   {
     for (int j=0; j< BOARD_SIZE; j++)
@@ -378,7 +406,38 @@ int check_if_ship_sunk(char board[][10], char ship_name) {
   return 1;
 }
 
-//Function that checks if there is a winner
+//Function that notifies the player if they sunk a ship_name
+//(Checks all remaining ships; if one has been sunk, notifies player and removes from list of remaining)
+void notify_player_ship_sunk(char board[][10], char remaining_ships[5])
+{
+  char sunk_ship = '\0';
+  for (int i=0; i<NUM_SHIPS; i++)
+  {
+    char current_letter = remaining_ships[i];
+    if (check_if_ship_sunk(board, current_letter))
+    {
+      sunk_ship = current_letter;
+      remaining_ships[i] = '\0';
+      break;
+    }
+  }
+  switch(sunk_ship)
+  {
+    case 'c': printf("Carrier destroyed!\n");
+              break;
+    case 'r': printf("Cruiser destroyed!\n");
+              break;
+    case 'd': printf("Destroyer destroyed!\n");
+              break;
+    case 's': printf("Submarine destroyed!\n");
+              break;
+    case 'b': printf("Battleship destroyed!\n");
+              break;
+    default: printf("No ships sunk\n");
+  }
+}
+
+//Function that checks if there is a winner (checks if every ship sunk)
 int is_winner(char board[][10]) {
   if (check_if_ship_sunk(board, 'c') && check_if_ship_sunk(board, 'b') && check_if_ship_sunk(board, 'r') && check_if_ship_sunk(board, 's') && check_if_ship_sunk(board, 'd'))
   {
